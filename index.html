@@ -2,44 +2,323 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>DevOps Open Source App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agenda — DevOps Open Source App</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #111827;
-      color: #f9fafb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
+    :root {
+      --bg: #111827;
+      --card: #1f2937;
+      --card-2: #273449;
+      --border: #374151;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-dark: #0ea5e9;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #facc15;
     }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      min-height: 100vh;
+      padding: 32px 16px;
+    }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 28px; }
+    h1 { color: var(--accent); margin: 0 0 6px; font-size: 28px; }
+    header p { color: var(--muted); margin: 0; font-size: 14px; }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+
     .card {
-      background: #1f2937;
-      padding: 40px;
+      background: var(--card);
+      padding: 24px;
       border-radius: 16px;
-      max-width: 720px;
       box-shadow: 0 20px 40px rgba(0,0,0,.35);
     }
-    h1 { color: #38bdf8; }
-    .easter-egg { margin-top: 28px; font-size: 13px; opacity: 0.55; color: #facc15; text-align: center; }
-    li { margin: 10px 0; }
-    .ok { color: #22c55e; font-weight: bold; }
+    .card h2 { margin: 0 0 16px; font-size: 18px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .card h2 .count { font-size: 12px; color: var(--muted); font-weight: normal; margin-left: auto; }
+
+    label { display: block; font-size: 12px; color: var(--muted); margin: 12px 0 4px; }
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+    textarea { resize: vertical; min-height: 56px; }
+
+    .row { display: flex; gap: 12px; }
+    .row > div { flex: 1; }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      font-family: inherit;
+      transition: background .15s, opacity .15s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #062a3a;
+      padding: 11px 16px;
+      width: 100%;
+      margin-top: 16px;
+    }
+    .btn-primary:hover { background: var(--accent-dark); }
+
+    ul.list { list-style: none; padding: 0; margin: 16px 0 0; }
+    ul.list li {
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .when {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 6px 10px;
+      text-align: center;
+      min-width: 72px;
+      border: 1px solid var(--border);
+    }
+    .when .date { font-size: 12px; color: var(--accent); font-weight: bold; }
+    .when .time { font-size: 16px; font-weight: bold; }
+    .info { flex: 1; min-width: 0; }
+    .info .name { font-weight: bold; }
+    .info .meta { font-size: 12px; color: var(--muted); margin-top: 2px; word-break: break-word; }
+    .del {
+      background: transparent;
+      color: var(--red);
+      border: 1px solid var(--red);
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+    .del:hover { background: var(--red); color: #fff; }
+
+    .contact-item { justify-content: space-between; }
+    .contact-item .avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--accent); color: #062a3a;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold; font-size: 16px; flex-shrink: 0;
+    }
+    .empty { color: var(--muted); font-size: 13px; text-align: center; padding: 18px 0; }
+
+    .easter-egg { margin-top: 28px; font-size: 13px; opacity: 0.55; color: var(--yellow); text-align: center; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>DevOps Open Source App</h1>
-    <p class="ok">Sistema atualizado automaticamente via GitHub Actions na AWS EC2 com Docker.</p>
-    <p>Projeto acadêmico demonstrando práticas de DevOps:</p>
-    <ul>
-      <li>Versionamento com GitHub</li>
-      <li>Containerização com Docker</li>
-      <li>Deploy em nuvem pública AWS</li>
-      <li>Pipeline CI/CD com GitHub Actions</li>
-      <li>Publicação via servidor web Nginx</li>
-    </ul>
+  <div class="wrap">
+    <header>
+      <h1>📅 Minha Agenda</h1>
+      <p>DevOps Open Source App — dados salvos localmente no seu navegador</p>
+    </header>
+
+    <div class="grid">
+      <!-- Coluna: Agendar horários -->
+      <section class="card">
+        <h2>Marcar horário <span class="count" id="apptCount">0</span></h2>
+        <form id="apptForm">
+          <div class="row">
+            <div>
+              <label for="apptDate">Data</label>
+              <input type="date" id="apptDate" required>
+            </div>
+            <div>
+              <label for="apptTime">Hora</label>
+              <input type="time" id="apptTime" required>
+            </div>
+          </div>
+          <label for="apptContact">Contato</label>
+          <select id="apptContact" required>
+            <option value="">Selecione um contato…</option>
+          </select>
+          <label for="apptNote">Observação (opcional)</label>
+          <input type="text" id="apptNote" placeholder="Ex.: Reunião de projeto">
+          <button type="submit" class="btn-primary">Marcar horário</button>
+        </form>
+        <ul class="list" id="apptList"></ul>
+      </section>
+
+      <!-- Coluna: Contatos -->
+      <section class="card">
+        <h2>Contatos <span class="count" id="contactCount">0</span></h2>
+        <form id="contactForm">
+          <label for="contactName">Nome</label>
+          <input type="text" id="contactName" placeholder="Nome do contato" required>
+          <label for="contactPhone">Telefone / E-mail (opcional)</label>
+          <input type="text" id="contactPhone" placeholder="(00) 00000-0000">
+          <button type="submit" class="btn-primary">Adicionar contato</button>
+        </form>
+        <ul class="list" id="contactList"></ul>
+      </section>
+    </div>
+
     <div class="easter-egg">🇧🇷 BRASIL CAMPEÃO DA COPA DO MUNDO!!</div>
   </div>
+
+  <script>
+    const KEYS = { appts: 'agenda.appointments', contacts: 'agenda.contacts' };
+
+    const load = (k) => { try { return JSON.parse(localStorage.getItem(k)) || []; } catch { return []; } };
+    const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+    const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+    let contacts = load(KEYS.contacts);
+    let appts = load(KEYS.appts);
+
+    const $ = (id) => document.getElementById(id);
+
+    // ---------- Contatos ----------
+    function renderContacts() {
+      const list = $('contactList');
+      $('contactCount').textContent = contacts.length;
+      list.innerHTML = '';
+
+      // Atualiza o <select> de contatos no formulário de horários
+      const sel = $('apptContact');
+      const prev = sel.value;
+      sel.innerHTML = '<option value="">Selecione um contato…</option>';
+      contacts.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = c.name;
+        sel.appendChild(opt);
+      });
+      sel.value = prev;
+
+      if (!contacts.length) {
+        list.innerHTML = '<li class="empty">Nenhum contato cadastrado.</li>';
+        return;
+      }
+
+      contacts.forEach(c => {
+        const li = document.createElement('li');
+        li.className = 'contact-item';
+        const initial = c.name.trim().charAt(0).toUpperCase() || '?';
+        li.innerHTML = `
+          <div class="avatar">${initial}</div>
+          <div class="info">
+            <div class="name"></div>
+            <div class="meta"></div>
+          </div>
+          <button class="del" data-id="${c.id}">Excluir</button>`;
+        li.querySelector('.name').textContent = c.name;
+        li.querySelector('.meta').textContent = c.phone || 'sem contato';
+        li.querySelector('.del').addEventListener('click', () => removeContact(c.id));
+        list.appendChild(li);
+      });
+    }
+
+    function removeContact(id) {
+      const used = appts.some(a => a.contactId === id);
+      const msg = used
+        ? 'Este contato possui horários marcados. Excluir o contato também removerá esses horários. Continuar?'
+        : 'Excluir este contato?';
+      if (!confirm(msg)) return;
+      contacts = contacts.filter(c => c.id !== id);
+      appts = appts.filter(a => a.contactId !== id);
+      save(KEYS.contacts, contacts);
+      save(KEYS.appts, appts);
+      renderContacts();
+      renderAppts();
+    }
+
+    $('contactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = $('contactName').value.trim();
+      if (!name) return;
+      contacts.push({ id: uid(), name, phone: $('contactPhone').value.trim() });
+      save(KEYS.contacts, contacts);
+      e.target.reset();
+      renderContacts();
+    });
+
+    // ---------- Horários ----------
+    function fmtDate(iso) {
+      const [y, m, d] = iso.split('-');
+      return `${d}/${m}`;
+    }
+
+    function renderAppts() {
+      const list = $('apptList');
+      $('apptCount').textContent = appts.length;
+      list.innerHTML = '';
+
+      if (!appts.length) {
+        list.innerHTML = '<li class="empty">Nenhum horário marcado.</li>';
+        return;
+      }
+
+      const sorted = [...appts].sort((a, b) =>
+        (a.date + a.time).localeCompare(b.date + b.time));
+
+      sorted.forEach(a => {
+        const contact = contacts.find(c => c.id === a.contactId);
+        const name = contact ? contact.name : '(contato removido)';
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <div class="when">
+            <div class="date">${fmtDate(a.date)}</div>
+            <div class="time">${a.time}</div>
+          </div>
+          <div class="info">
+            <div class="name"></div>
+            <div class="meta"></div>
+          </div>
+          <button class="del" data-id="${a.id}">Desmarcar</button>`;
+        li.querySelector('.name').textContent = name;
+        const parts = [];
+        if (contact && contact.phone) parts.push(contact.phone);
+        if (a.note) parts.push(a.note);
+        li.querySelector('.meta').textContent = parts.join(' · ') || ' ';
+        li.querySelector('.del').addEventListener('click', () => removeAppt(a.id));
+        list.appendChild(li);
+      });
+    }
+
+    function removeAppt(id) {
+      appts = appts.filter(a => a.id !== id);
+      save(KEYS.appts, appts);
+      renderAppts();
+    }
+
+    $('apptForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const date = $('apptDate').value;
+      const time = $('apptTime').value;
+      const contactId = $('apptContact').value;
+      if (!date || !time || !contactId) return;
+
+      const clash = appts.some(a => a.date === date && a.time === time);
+      if (clash && !confirm('Já existe um horário marcado nesse dia e hora. Marcar mesmo assim?')) return;
+
+      appts.push({ id: uid(), date, time, contactId, note: $('apptNote').value.trim() });
+      save(KEYS.appts, appts);
+      $('apptNote').value = '';
+      renderAppts();
+    });
+
+    // ---------- Inicialização ----------
+    renderContacts();
+    renderAppts();
+  </script>
 </body>
 </html>
